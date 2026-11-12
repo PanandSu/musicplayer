@@ -14,7 +14,12 @@ Inspired by modern CLI/TUI players like `termusic`, `ratune`, `sparkplayer`, and
   - **File Explorer**: Browse directories, filter/search files, and inspect files with audio type badges (`[FLAC]`, `[MP3]`, etc.).
   - **Playlist Queue**: Track order, currently playing indicators, durations, and queue manipulation (add, remove, clear).
   - **Now Playing & Audio Info**: Track title, artist, album, audio format, sample rate (e.g. 44.1 kHz), and bitrate.
-  - **Dynamic Spectrum Visualizer**: Animated harmonic frequency bars with peak hold and color gradient (Cyan -> Magenta -> Yellow).
+  - **Dynamic Multi-Style Audio Visualizer**:
+    - **Gradient Bars**: Modern solid vertical gradient bars with peak hold caps.
+    - **Particle Sparks**: Physics-based upward particle fountain with sparks (`✦`, `★`, `✧`, `*`) and gravity drift.
+    - **Braille Wave**: Cyberpunk high-density Braille dot matrix waveform (`⣿`, `⣾`, `⠿`, `⠶`).
+    - **Retro Hi-Fi EQ**: Vintage stereo rack segmented LEDs (`[▓▓]`, `[▒▒]`, `[░░]`) with green/yellow/red levels and peak caps (`━`).
+    - **Cosmic Warp**: 3D radial starburst hyperspace tunnel with pulsing center audio core (`✹`/`●`).
   - **Progress Bar & Playback Stats**: Elapsed and remaining time, percentage, and seek capabilities.
 - **Playback Modes**:
   - Repeat: `All`, `Track`, or `Off`.
@@ -31,7 +36,8 @@ Inspired by modern CLI/TUI players like `termusic`, `ratune`, `sparkplayer`, and
 | Key | Action |
 | :--- | :--- |
 | `Space` | Play / Pause |
-| `Tab` | Switch focus between **File Explorer** and **Playlist Queue** |
+| `Tab` | Switch focus (**Files** → **Queue** → **Visualizer**; when on Visualizer, cycles styles!) |
+| `v` | Cycle Visualizer Style directly (`Bars` → `Sparks` → `Braille` → `Retro EQ` → `Warp`) |
 | `n` / `p` | Skip to **Next** / **Previous** track |
 | `Left` / `Right` | Seek backward / forward 5 seconds |
 | `+` / `-` | Volume Up / Down (5% steps) |

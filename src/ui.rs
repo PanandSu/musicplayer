@@ -2,7 +2,6 @@ use crate::app::{ActivePanel, App};
 use crate::file_browser::ItemType;
 use crate::metadata::format_duration;
 use crate::playlist::RepeatMode;
-use crate::visualizer::SPECTRUM_BARS_COUNT;
 use ratatui::{
     layout::{Alignment, Constraint, Direction, Layout, Rect},
     style::{Color, Modifier, Style},
@@ -383,16 +382,35 @@ fn render_playlist(frame: &mut Frame, app: &mut App, area: Rect) {
 }
 
 fn render_now_playing_and_visualizer(frame: &mut Frame, app: &App, area: Rect) {
+    let is_focused = app.active_panel == ActivePanel::Visualizer;
+    let border_color = if is_focused {
+        Color::Yellow
+    } else {
+        Color::DarkGray
+    };
+
+    let title = if is_focused {
+        format!(
+            " 🎧 Visualizer: {} [Press <Tab> to switch] ",
+            app.visualizer.style.display_name()
+        )
+    } else {
+        format!(
+            " 🎧 Visualizer: {} ",
+            app.visualizer.style.display_name()
+        )
+    };
+
     let block = Block::default()
         .borders(Borders::ALL)
         .border_type(BorderType::Rounded)
         .title(Span::styled(
-            " 🎧 Now Playing & Spectrum ",
+            title,
             Style::default()
-                .fg(Color::Magenta)
+                .fg(if is_focused { Color::Yellow } else { Color::Magenta })
                 .add_modifier(Modifier::BOLD),
         ))
-        .border_style(Style::default().fg(Color::DarkGray));
+        .border_style(Style::default().fg(border_color));
 
     let inner = block.inner(area);
     frame.render_widget(block, area);
@@ -405,7 +423,7 @@ fn render_now_playing_and_visualizer(frame: &mut Frame, app: &App, area: Rect) {
         .direction(Direction::Vertical)
         .constraints([
             Constraint::Length(3), // Info details
-            Constraint::Min(3),    // Spectrum visualizer bars
+            Constraint::Min(3),    // Spectrum visualizer
         ])
         .split(inner);
 
@@ -465,49 +483,7 @@ fn render_spectrum(frame: &mut Frame, app: &App, area: Rect) {
         return;
     }
 
-    let max_height = area.height as usize;
-    let available_width = area.width as usize;
-
-    // Number of bars we can fit
-    let bars_count = SPECTRUM_BARS_COUNT.min(available_width / 2);
-    if bars_count == 0 {
-        return;
-    }
-
-    // Build columns of characters for each bar
-    let mut columns: Vec<Vec<char>> = Vec::new();
-    for i in 0..bars_count {
-        columns.push(app.visualizer.render_bar_column(i, max_height));
-    }
-
-    // Render rows from top to bottom
-    let mut lines = Vec::with_capacity(max_height);
-    for row in 0..max_height {
-        let mut spans = Vec::new();
-        // Leading space to center
-        let padding = (available_width.saturating_sub(bars_count * 2)) / 2;
-        if padding > 0 {
-            spans.push(Span::raw(" ".repeat(padding)));
-        }
-
-        for (bar_idx, col) in columns.iter().enumerate() {
-            let ch = col.get(row).copied().unwrap_or(' ');
-            let norm_bar = bar_idx as f32 / bars_count as f32;
-
-            // Vibrant color gradient: Cyan -> Magenta -> Yellow / Green
-            let color = if norm_bar < 0.35 {
-                Color::Cyan
-            } else if norm_bar < 0.70 {
-                Color::Magenta
-            } else {
-                Color::Yellow
-            };
-
-            spans.push(Span::styled(format!("{} ", ch), Style::default().fg(color)));
-        }
-        lines.push(Line::from(spans));
-    }
-
+    let lines = app.visualizer.render(area.width as usize, area.height as usize);
     let spectrum_para = Paragraph::new(lines);
     frame.render_widget(spectrum_para, area);
 }
@@ -566,7 +542,11 @@ fn render_footer(frame: &mut Frame, app: &App, area: Rect) {
 
     // Status bar & Hotkeys hint
     let status_text = app.current_status().map(|s| s.to_string()).unwrap_or_else(|| {
-        "[Space] Play/Pause [Tab] Switch [n/p] Next/Prev [←/→] Seek [+/-] Vol [s] Shuffle [r] Repeat [/] Filter [?] Help [q] Quit".to_string()
+        if app.active_panel == ActivePanel::Visualizer {
+            "[Tab] Next Visualizer Style  [v] Switch Style  [h/Esc] Files  [k] Queue  [Space] Play/Pause".to_string()
+        } else {
+            "[Space] Play/Pause [Tab] Switch Panel [v] Visualizer Style [n/p] Next/Prev [←/→] Seek [+/-] Vol [?] Help".to_string()
+        }
     });
 
     let status_para = Paragraph::new(Line::from(vec![
@@ -615,6 +595,7 @@ fn render_help_modal(frame: &mut Frame, area: Rect) {
         Line::from("  m            Toggle Mute / Unmute"),
         Line::from("  s            Toggle Shuffle mode (ON / OFF)"),
         Line::from("  r            Cycle Repeat mode (Off -> All -> Track)"),
+        Line::from("  v / Tab (in Vis) Switch Visualizer Style (Bars, Sparks, Braille, Retro EQ, Warp)"),
         Line::from("  Ctrl + L     Redraw & refresh terminal screen"),
         Line::from("  ?            Toggle this Help window"),
         Line::from("  q / Esc      Quit application / Close Help"),

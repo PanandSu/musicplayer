@@ -12,6 +12,7 @@ use std::time::{Duration, Instant};
 pub enum ActivePanel {
     FileBrowser,
     Playlist,
+    Visualizer,
 }
 
 pub struct App {
@@ -204,11 +205,36 @@ impl App {
                 self.show_help = true;
                 return;
             }
-            KeyCode::Tab => {
+            KeyCode::Char('v') => {
+                let style = self.visualizer.cycle_style();
+                self.set_status(format!("Visualizer style: {}", style.display_name()));
+                return;
+            }
+            KeyCode::BackTab => {
                 self.active_panel = match self.active_panel {
-                    ActivePanel::FileBrowser => ActivePanel::Playlist,
+                    ActivePanel::FileBrowser => ActivePanel::Visualizer,
                     ActivePanel::Playlist => ActivePanel::FileBrowser,
+                    ActivePanel::Visualizer => ActivePanel::Playlist,
                 };
+                return;
+            }
+            KeyCode::Tab => {
+                match self.active_panel {
+                    ActivePanel::FileBrowser => {
+                        self.active_panel = ActivePanel::Playlist;
+                    }
+                    ActivePanel::Playlist => {
+                        self.active_panel = ActivePanel::Visualizer;
+                        self.set_status(format!(
+                            "Visualizer focused. <Tab> to switch style ({})",
+                            self.visualizer.style.display_name()
+                        ));
+                    }
+                    ActivePanel::Visualizer => {
+                        let style = self.visualizer.cycle_style();
+                        self.set_status(format!("Visualizer style: {}", style.display_name()));
+                    }
+                }
                 return;
             }
             KeyCode::Char(' ') => {
@@ -283,6 +309,26 @@ impl App {
         match self.active_panel {
             ActivePanel::FileBrowser => self.handle_browser_key(key),
             ActivePanel::Playlist => self.handle_playlist_key(key),
+            ActivePanel::Visualizer => self.handle_visualizer_key(key),
+        }
+    }
+
+    fn handle_visualizer_key(&mut self, key: KeyEvent) {
+        match key.code {
+            KeyCode::Enter => {
+                let style = self.visualizer.cycle_style();
+                self.set_status(format!("Visualizer style: {}", style.display_name()));
+            }
+            KeyCode::Char('h') | KeyCode::Left | KeyCode::Esc => {
+                self.active_panel = ActivePanel::FileBrowser;
+            }
+            KeyCode::Char('k') | KeyCode::Up => {
+                self.active_panel = ActivePanel::Playlist;
+            }
+            KeyCode::Char('l') => {
+                self.active_panel = ActivePanel::Playlist;
+            }
+            _ => {}
         }
     }
 
