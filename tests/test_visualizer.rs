@@ -8,7 +8,10 @@ fn test_all_visualizer_styles_render() {
         VisualizerStyle::SolidBars,
         VisualizerStyle::ParticleSparks,
         VisualizerStyle::BrailleWave,
-        VisualizerStyle::RetroEqualizer,
+        VisualizerStyle::AuroraPlasma,
+        VisualizerStyle::Donut3D,
+        VisualizerStyle::DoomFire,
+        VisualizerStyle::MatrixRain,
         VisualizerStyle::CosmicWarp,
     ];
 
@@ -37,7 +40,10 @@ fn test_visualizer_style_cycle() {
 
     assert_eq!(vis.cycle_style(), VisualizerStyle::ParticleSparks);
     assert_eq!(vis.cycle_style(), VisualizerStyle::BrailleWave);
-    assert_eq!(vis.cycle_style(), VisualizerStyle::RetroEqualizer);
+    assert_eq!(vis.cycle_style(), VisualizerStyle::AuroraPlasma);
+    assert_eq!(vis.cycle_style(), VisualizerStyle::Donut3D);
+    assert_eq!(vis.cycle_style(), VisualizerStyle::DoomFire);
+    assert_eq!(vis.cycle_style(), VisualizerStyle::MatrixRain);
     assert_eq!(vis.cycle_style(), VisualizerStyle::CosmicWarp);
     assert_eq!(vis.cycle_style(), VisualizerStyle::SolidBars);
 }
@@ -47,13 +53,11 @@ fn test_particle_physics() {
     let mut vis = SpectrumVisualizer::new();
     vis.style = VisualizerStyle::ParticleSparks;
 
-    // Simulate audio playing
     for _ in 0..30 {
         vis.update(true);
     }
     assert!(!vis.particles.is_empty(), "Particles should spawn when playing");
 
-    // Simulate pause/stop: particles should decay and vanish
     for _ in 0..60 {
         vis.update(false);
     }

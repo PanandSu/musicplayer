@@ -381,7 +381,7 @@ fn render_playlist(frame: &mut Frame, app: &mut App, area: Rect) {
     }
 }
 
-fn render_now_playing_and_visualizer(frame: &mut Frame, app: &App, area: Rect) {
+fn render_now_playing_and_visualizer(frame: &mut Frame, app: &mut App, area: Rect) {
     let is_focused = app.active_panel == ActivePanel::Visualizer;
     let border_color = if is_focused {
         Color::Yellow
@@ -478,7 +478,7 @@ fn render_now_playing_and_visualizer(frame: &mut Frame, app: &App, area: Rect) {
     render_spectrum(frame, app, sub_chunks[1]);
 }
 
-fn render_spectrum(frame: &mut Frame, app: &App, area: Rect) {
+fn render_spectrum(frame: &mut Frame, app: &mut App, area: Rect) {
     if area.height == 0 || area.width == 0 {
         return;
     }

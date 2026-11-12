@@ -14,12 +14,15 @@ Inspired by modern CLI/TUI players like `termusic`, `ratune`, `sparkplayer`, and
   - **File Explorer**: Browse directories, filter/search files, and inspect files with audio type badges (`[FLAC]`, `[MP3]`, etc.).
   - **Playlist Queue**: Track order, currently playing indicators, durations, and queue manipulation (add, remove, clear).
   - **Now Playing & Audio Info**: Track title, artist, album, audio format, sample rate (e.g. 44.1 kHz), and bitrate.
-  - **Dynamic Multi-Style Audio Visualizer**:
-    - **Gradient Bars**: Modern solid vertical gradient bars with peak hold caps.
-    - **Particle Sparks**: Physics-based upward particle fountain with sparks (`✦`, `★`, `✧`, `*`) and gravity drift.
-    - **Braille Wave**: Cyberpunk high-density Braille dot matrix waveform (`⣿`, `⣾`, `⠿`, `⠶`).
-    - **Retro Hi-Fi EQ**: Vintage stereo rack segmented LEDs (`[▓▓]`, `[▒▒]`, `[░░]`) with green/yellow/red levels and peak caps (`━`).
-    - **Cosmic Warp**: 3D radial starburst hyperspace tunnel with pulsing center audio core (`✹`/`●`).
+  - **Dynamic Multi-Style High-Resolution Visualizers** (inspired by `ascii.rest`):
+    - **1. Gradient Bars**: 1/8th-step high-precision vertical bars with floating momentum peak caps (` `, `▂`, `▃`, `▄`, `▅`, `▆`, `▇`, `█`, `▔`).
+    - **2. Particle Sparks**: Audio-reactive fireworks and particle fountains with physics, air drag, gravity, and dying embers (`✦`, `★`, `✸`, `✧`, `*`, `•`, `.`).
+    - **3. Braille Wave (High-Res)**: 2×4 sub-pixel Braille canvas (160×60 effective resolution) connected oscilloscope wave.
+    - **4. Aurora Plasma**: Shimmering fluid Northern Lights plasma field with TrueColor emerald, cyan, and violet gradients.
+    - **5. 3D Donut**: The iconic 3D rotating ASCII torus rendered in real-time, pulsating in radius and spin to the music tempo.
+    - **6. Demoscene Fire**: Classic demoscene Doom fire simulation fueled directly by audio spectrum bass and treble.
+    - **7. Matrix Rain**: Falling cyber digital rain with glowing white heads and emerald green trails pulsing to the rhythm.
+    - **8. Cosmic Warp**: 3D radial starburst hyperspace tunnel with audio-reactive speed and a pulsating rhythm core (`✹`/`●`).
   - **Progress Bar & Playback Stats**: Elapsed and remaining time, percentage, and seek capabilities.
 - **Playback Modes**:
   - Repeat: `All`, `Track`, or `Off`.
